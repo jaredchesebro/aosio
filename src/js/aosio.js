@@ -14,6 +14,7 @@ import intersectionObserver from './libs/intersectionObserver';
 
 import detect from './helpers/detector';
 import elements from './helpers/elements';
+import resolveEasing from './helpers/resolveEasing';
 
 /**
  * Private variables
@@ -78,7 +79,24 @@ const initializeObservers = function () {
  */
 const refresh = function (initialize = false) {
   if (initialize) initialized = true;
-  if (initialized) initializeObservers();
+  if (initialized) {
+    initializeObservers();
+
+    /**
+     * Enable transitions after initial observer pass.
+     * Double-rAF ensures observers have fired and the first frame
+     * (elements in their correct initial state) has painted before
+     * transitions are enabled. This prevents a visible fade-out
+     * on page reload when the browser restores scroll position.
+     */
+    if (!document.body.classList.contains('aos-ready')) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          document.body.classList.add('aos-ready');
+        });
+      });
+    }
+  }
 };
 
 /**
@@ -103,11 +121,16 @@ const disable = function () {
     observers = null;
   }
 
+  document.body.classList.remove('aos-ready');
+
   $aosElements.forEach(function (el) {
     el.node.removeAttribute('data-aos');
     el.node.removeAttribute('data-aos-easing');
     el.node.removeAttribute('data-aos-duration');
     el.node.removeAttribute('data-aos-delay');
+    el.node.style.removeProperty('--aos-duration');
+    el.node.style.removeProperty('--aos-delay');
+    el.node.style.removeProperty('--aos-easing');
 
     if (options.initClassName) {
       el.node.classList.remove(options.initClassName);
@@ -169,18 +192,14 @@ const init = function init(settings) {
   }
 
   /**
-   * Set global settings on body, based on options
-   * so CSS can use it
+   * Set global settings on body as CSS custom properties
    */
-  document
-    .querySelector('body')
-    .setAttribute('data-aos-easing', options.easing);
-
-  document
-    .querySelector('body')
-    .setAttribute('data-aos-duration', options.duration);
-
-  document.querySelector('body').setAttribute('data-aos-delay', options.delay);
+  document.body.style.setProperty('--aos-duration', `${options.duration}ms`);
+  document.body.style.setProperty('--aos-delay', `${options.delay}ms`);
+  document.body.style.setProperty(
+    '--aos-easing',
+    resolveEasing(options.easing),
+  );
 
   /**
    * Handle initializing based on startEvent

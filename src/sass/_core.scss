@@ -1,27 +1,19 @@
 @media (prefers-reduced-motion: no-preference) {
-  // Generate Duration && Delay
   [data-aos] {
-    @for $i from 1 through 60 {
-      body[data-aos-duration='#{$i * 50}'] &,
-      &[data-aos][data-aos-duration='#{$i * 50}'] {
-        transition-duration: #{$i * 50}ms;
-      }
+    pointer-events: none;
 
-      body[data-aos-delay='#{$i * 50}'] &,
-      &[data-aos][data-aos-delay='#{$i * 50}'] {
-        transition-delay: 0s;
-
-        &.aos-animate {
-          transition-delay: #{$i * 50}ms;
-        }
-      }
+    &.aos-animate {
+      pointer-events: auto;
     }
   }
 
-  [data-aos] {
-    pointer-events: none;
+  body.aos-ready [data-aos] {
+    transition-duration: var(--aos-duration);
+    transition-delay: 0s;
+    transition-timing-function: var(--aos-easing);
+
     &.aos-animate {
-      pointer-events: auto;
+      transition-delay: var(--aos-delay);
     }
   }
 }

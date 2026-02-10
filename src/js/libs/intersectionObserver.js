@@ -4,6 +4,7 @@
  */
 
 import getInlineOption from '../helpers/getInlineOption';
+import resolveEasing from '../helpers/resolveEasing';
 
 /**
  * Convert anchor-placement to IntersectionObserver rootMargin
@@ -142,6 +143,15 @@ export const createObserver = (elements, options) => {
     const animatedClassNames = [options.animatedClassName]
       .concat(customClassNames ? customClassNames.split(' ') : [])
       .filter((className) => typeof className === 'string');
+
+    // Set per-element CSS custom properties for duration/delay/easing
+    const duration = getInlineOption(node, 'duration');
+    const delay = getInlineOption(node, 'delay');
+    const easing = getInlineOption(node, 'easing');
+
+    if (duration) node.style.setProperty('--aos-duration', `${duration}ms`);
+    if (delay) node.style.setProperty('--aos-delay', `${delay}ms`);
+    if (easing) node.style.setProperty('--aos-easing', resolveEasing(easing));
 
     // Add init class
     if (options.initClassName) {
