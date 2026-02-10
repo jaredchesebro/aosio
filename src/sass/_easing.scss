@@ -30,11 +30,13 @@ $aos-easing: (
 // Easings implementations
 // Default timing function: 'ease'
 
-[data-aos] {
-  @each $key, $val in $aos-easing {
-    body[data-aos-easing="#{$key}"] &,
-    &[data-aos][data-aos-easing="#{$key}"] {
-      transition-timing-function: $val;
+@media (prefers-reduced-motion: no-preference) {
+  [data-aos] {
+    @each $key, $val in $aos-easing {
+      body[data-aos-easing="#{$key}"] &,
+      &[data-aos][data-aos-easing="#{$key}"] {
+        transition-timing-function: $val;
+      }
     }
   }
 }
