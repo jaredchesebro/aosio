@@ -103,8 +103,8 @@ AOS.init({
 
   // Per-element settings (overridable via data-aos-* attributes):
   offset: 120,           // offset (px) from the trigger point
-  delay: 0,              // 0 to 3000, step 50ms
-  duration: 400,         // 0 to 3000, step 50ms
+  delay: 0,              // delay in ms (any value)
+  duration: 400,         // duration in ms (any value)
   easing: 'ease',        // default easing for animations
   once: false,           // animate only once (on scroll down)
   mirror: false,         // animate out when scrolling past
@@ -133,32 +133,25 @@ Customize per-element behavior with `data-aos-*` attributes:
 ></div>
 ```
 
-### Anchor
-
-Trigger an animation based on another element's position:
-
-```html
-<div data-aos="fade-up" data-aos-anchor=".other-element"></div>
-```
-
-Useful for animating fixed elements as you scroll to a different section.
-
 ---
 
 ## Custom SCSS builds
 
-Copy the `src/sass/` directory into your project, then import only what you need:
+Copy the `src/sass/` directory into your project, then import only the animations you need:
 
 ```scss
 // Override defaults before importing
 $aos-distance: 200px;
 
-// Import only what you need
+// Core is required (sets up transition properties via CSS custom properties)
 @import 'path/to/sass/core';
-@import 'path/to/sass/easing';
+
+// Import only the animation groups you need
 @import 'path/to/sass/animations/fade';
 @import 'path/to/sass/animations/slide';
 ```
+
+Duration, delay, and easing are handled via CSS custom properties set by JS — no SCSS loops or generated CSS. The `_easing.scss` file is documentation-only and produces no CSS output.
 
 ---
 
@@ -298,8 +291,9 @@ npm run lint     # ESLint
 | File | Format | Description |
 |------|--------|-------------|
 | `dist/aosio.js` | UMD | Browser `<script>` tag (exposes `window.AOS`) |
-| `dist/aosio.css` | CSS | All animations, easings, durations |
+| `dist/aosio.css` | CSS | Animation keyframes + core transitions (~3KB) |
 
 ## Customizations
 
-See [CUSTOMIZATION.md](CUSTOMIZATION.md) for custom animations, custom easings, Animate.css integration, and duration/delay caveats.
+See [CUSTOMIZATION.md](CUSTOMIZATION.md) for custom animations, custom easings, and Animate.css integration.
+

@@ -29,13 +29,18 @@
 
 ### Custom easing
 
-```css
-[data-aos] {
-  body[data-aos-easing="new-easing"] &,
-  &[data-aos][data-aos-easing="new-easing"] {
-    transition-timing-function: cubic-bezier(.250, .250, .750, .750);
-  }
-}
+Pass any `cubic-bezier()` value directly via the `data-aos-easing` attribute:
+
+```html
+<div data-aos="fade-up" data-aos-easing="cubic-bezier(.250, .250, .750, .750)"></div>
+```
+
+Or set a custom default via `AOS.init()`:
+
+```js
+AOS.init({
+  easing: 'cubic-bezier(.250, .250, .750, .750)',
+});
 ```
 
 ### Integrating Animate.css
@@ -58,18 +63,3 @@ You may also need:
 [data-aos] { visibility: hidden; }
 [data-aos].animated { visibility: visible; }
 ```
-
----
-
-### Custom Duration and delay values
-
-Duration and delay accept values from 50 to 3000 in 50ms steps (handled via CSS). To add a custom value:
-
-```css
-body[data-aos-duration='4000'] [data-aos],
-[data-aos][data-aos][data-aos-duration='4000'] {
-  transition-duration: 4000ms;
-}
-```
-
-The doubled `[data-aos][data-aos]` selector gives per-element settings higher specificity than global settings without `!important`.
