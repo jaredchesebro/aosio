@@ -1,32 +1,18 @@
 let callback = () => {};
 
 function containsAOSNode(nodes) {
-  let i, currentNode, result;
-
-  for (i = 0; i < nodes.length; i += 1) {
-    currentNode = nodes[i];
-
-    if (currentNode.dataset && currentNode.dataset.aos) {
-      return true;
-    }
-
-    result = currentNode.children && containsAOSNode(currentNode.children);
-
-    if (result) {
-      return true;
-    }
-  }
-
-  return false;
+  return nodes.some(
+    (n) =>
+      n.nodeType === 1 &&
+      (n.dataset?.aos != null || n.querySelector?.('[data-aos]')),
+  );
 }
 
 function check(mutations) {
   if (!mutations) return;
 
   mutations.forEach((mutation) => {
-    const addedNodes = Array.prototype.slice.call(mutation.addedNodes);
-
-    if (containsAOSNode(addedNodes)) {
+    if (containsAOSNode([...mutation.addedNodes])) {
       return callback();
     }
   });

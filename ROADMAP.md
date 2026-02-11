@@ -2,7 +2,6 @@
 
 ## Low Priority — Performance
 
-- **Replace `containsAOSNode` recursive walk with `querySelector`** — The recursive function walks all children on every DOM mutation. Native `querySelector('[data-aos]')` is faster and simpler.
 - **Remove unused `observers` array from return value** — `intersectionObserver.js` allocates an `observers` array on every `createObserver()` call that nothing consumes. Only `disconnect()` and `activate()` are used.
 
 ## Low Priority — Code Simplification
@@ -41,3 +40,4 @@
 - **Only trigger MutationObserver rebuild on additions** — Removed `removedNodes` from the MutationObserver check so only newly added `[data-aos]` elements trigger `refreshHard()`.
 - **Prevent `refresh(true)` from firing twice on page load** — Added `if (!initialized)` guard to the `load` listener so `refresh(true)` doesn't run again when it already fired for `DOMContentLoaded`.
 - **Skip observer rebuild on width-only resizes** — Cache `window.innerHeight` and skip `refresh()` when only width changes, since rootMargin is vertical only.
+- **Replace `containsAOSNode` recursive walk with `querySelector`** — Replaced manual recursive tree walk with native `querySelector('[data-aos]')` and modernized array handling.
