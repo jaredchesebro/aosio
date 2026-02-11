@@ -146,10 +146,6 @@ const disable = function () {
   document.body.classList.remove('aos-ready');
 
   $aosElements.forEach(function (el) {
-    el.node.removeAttribute('data-aos');
-    el.node.removeAttribute('data-aos-easing');
-    el.node.removeAttribute('data-aos-duration');
-    el.node.removeAttribute('data-aos-delay');
     el.node.style.removeProperty('--aos-duration');
     el.node.style.removeProperty('--aos-delay');
     el.node.style.removeProperty('--aos-easing');
