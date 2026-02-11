@@ -1,9 +1,5 @@
 # Roadmap
 
-## Medium Priority — Stability
-
-- **Prevent `refresh(true)` from firing twice on page load** — When `readyState` is `'interactive'`, `refresh(true)` runs immediately and again on `load`. The `load` listener callback should check `if (initialized) return`.
-
 ## Low Priority — Performance
 
 - **Replace `containsAOSNode` recursive walk with `querySelector`** — The recursive function walks all children on every DOM mutation. Native `querySelector('[data-aos]')` is faster and simpler.
@@ -44,3 +40,4 @@
 - **Guard against double initialization** — `init()` now calls `destroy()` first if already initialized, preventing listener and observer leaks on repeated calls.
 - **Fix `getInlineOption` falsy-value fallback** — Changed `return attr || fallback` to `return attr ?? fallback` so values like `"0"` are preserved instead of falling through to the default.
 - **Only trigger MutationObserver rebuild on additions** — Removed `removedNodes` from the MutationObserver check so only newly added `[data-aos]` elements trigger `refreshHard()`.
+- **Prevent `refresh(true)` from firing twice on page load** — Added `if (!initialized)` guard to the `load` listener so `refresh(true)` doesn't run again when it already fired for `DOMContentLoaded`.

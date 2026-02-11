@@ -242,7 +242,7 @@ const init = function init(settings) {
     });
   } else {
     listen(window, 'load', function () {
-      refresh(true);
+      if (!initialized) refresh(true);
     });
   }
 
