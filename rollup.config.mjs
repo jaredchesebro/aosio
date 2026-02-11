@@ -11,7 +11,7 @@ const isDev = process.env.NODE_ENV === 'dev';
 
 const transformStyles = postcss({
   extract: 'aosio.css',
-  plugins: [autoprefixer, cssnano],
+  plugins: [autoprefixer, !isDev && cssnano].filter(Boolean),
   use: [['sass', { silenceDeprecations: ['legacy-js-api'] }]],
 });
 

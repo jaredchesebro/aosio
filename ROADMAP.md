@@ -2,7 +2,6 @@
 
 ## Low Priority — Build & Config
 
-- **Skip CSSNano in dev mode** — `cssnano` runs on every watch rebuild unnecessarily. Conditionally include it: `[autoprefixer, !isDev && cssnano].filter(Boolean)`.
 - **Stub SCSS import in ESM build** — The ESM build processes SCSS through PostCSS then discards it (`extract: false, inject: false`). Replace with a simple stub plugin to skip Sass compilation entirely.
 - **Remove unnecessary Rollup plugins** — `@rollup/plugin-node-resolve` and `@rollup/plugin-commonjs` are not needed — zero runtime dependencies, all local ES module imports.
 - **Remove `_easing.scss` from import chain** — The file is comment-only and emits zero CSS. It can be removed from `aosio.scss` (or converted to a `.md` reference) with no output change.
@@ -33,3 +32,4 @@
 - **Replace `Detector` class with plain functions** — Replaced the `Detector` class with plain arrow functions. Same API, no class/prototype overhead.
 - **Remove `orientationchange` listener** — Removed redundant listener since `resize` already fires on orientation change in all modern browsers.
 - **Add `exports` and `sideEffects` to `package.json`** — Added `"exports"` map for modern bundler resolution and `"sideEffects"` for CSS/SCSS to enable tree-shaking.
+- **Skip CSSNano in dev mode** — Conditionally include CSSNano only in production builds so dev watch rebuilds are faster.
