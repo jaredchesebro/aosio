@@ -10,7 +10,8 @@
       "import": "./dist/aosio.esm.js",
       "require": "./dist/aosio.js"
     },
-    "./dist/aosio.css": "./dist/aosio.css"
+    "./dist/*": "./dist/*",
+    "./src/*": "./src/*"
   },
   "sideEffects": [
     "*.css",
