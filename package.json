@@ -5,6 +5,17 @@
   "author": "DuBose Web",
   "main": "dist/aosio.js",
   "module": "dist/aosio.esm.js",
+  "exports": {
+    ".": {
+      "import": "./dist/aosio.esm.js",
+      "require": "./dist/aosio.js"
+    },
+    "./dist/aosio.css": "./dist/aosio.css"
+  },
+  "sideEffects": [
+    "*.css",
+    "*.scss"
+  ],
   "private": true,
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
