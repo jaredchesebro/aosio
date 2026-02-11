@@ -190,6 +190,9 @@ const destroy = function () {
  * - Create IntersectionObservers for all AOS elements
  */
 const init = function init(settings) {
+  // Clean up any prior initialization to prevent listener/observer leaks
+  if (initialized) destroy();
+
   options = Object.assign({}, defaults, settings);
 
   // Check for IntersectionObserver support

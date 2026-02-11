@@ -2,10 +2,9 @@
 
 ## Medium Priority — Stability
 
-- **Guard against double initialization** — Calling `init()` twice without `destroy()` leaks event listeners, MutationObservers, and IntersectionObservers. Either call `destroy()` at the top of `init()` or guard with `if (initialized) return`.
-- **Prevent `refresh(true)` from firing twice on page load** — When `readyState` is `'interactive'`, `refresh(true)` runs immediately and again on `load`. The `load` listener callback should check `if (initialized) return`.
 - **Fix `getInlineOption` falsy-value fallback** — `return attr || fallback` discards legitimate falsy values like `"0"`. Should use `return attr ?? fallback`.
 - **Only trigger MutationObserver rebuild on additions** — Removed nodes trigger a full observer rebuild unnecessarily. Only `addedNodes` containing `[data-aos]` elements need to fire `refreshHard()`.
+- **Prevent `refresh(true)` from firing twice on page load** — When `readyState` is `'interactive'`, `refresh(true)` runs immediately and again on `load`. The `load` listener callback should check `if (initialized) return`.
 
 ## Low Priority — Performance
 
@@ -44,3 +43,4 @@
 - **Remove `pointer-events: none` on un-animated elements** — Removed the `pointer-events: none` rule from `_core.scss` that blocked interaction on all `[data-aos]` elements until they animated.
 - **Stop `disable()` from stripping `data-aos` attributes** — Removed `removeAttribute('data-aos-*')` calls from `disable()` so user markup is preserved and re-initialization works after `disable()` or `destroy()`.
 - **Fix `Object.assign` mutating default options** — Froze defaults as a constant and changed `init()` to merge into a fresh object (`Object.assign({}, defaults, settings)`) so each call starts clean.
+- **Guard against double initialization** — `init()` now calls `destroy()` first if already initialized, preventing listener and observer leaks on repeated calls.
