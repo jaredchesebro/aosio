@@ -35,6 +35,7 @@ let observers = null;
 let mutationObs = null;
 let initialized = false;
 let listeners = [];
+let lastWindowHeight = null;
 
 /**
  * Default options
@@ -95,6 +96,11 @@ const initializeObservers = function () {
 const refresh = function (initialize = false) {
   if (initialize) initialized = true;
   if (initialized) {
+    // Skip rebuild on width-only resizes — rootMargin is vertical only
+    const currentHeight = window.innerHeight;
+    if (!initialize && lastWindowHeight === currentHeight) return;
+    lastWindowHeight = currentHeight;
+
     initializeObservers();
 
     /**
@@ -180,6 +186,7 @@ const destroy = function () {
 
   $aosElements = [];
   initialized = false;
+  lastWindowHeight = null;
 };
 
 /**
