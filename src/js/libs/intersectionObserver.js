@@ -262,8 +262,6 @@ export const createObserver = (elements, options) => {
         }
       });
     },
-
-    observers: Array.from(observersByConfig.values()).map((v) => v.observer),
   };
 };
 

@@ -1,9 +1,5 @@
 # Roadmap
 
-## Low Priority — Performance
-
-- **Remove unused `observers` array from return value** — `intersectionObserver.js` allocates an `observers` array on every `createObserver()` call that nothing consumes. Only `disconnect()` and `activate()` are used.
-
 ## Low Priority — Code Simplification
 
 - **Replace `Detector` class with plain functions** — `detector.js` exports a stateless class instantiated once. Plain exported functions avoid class/prototype overhead and are simpler.
@@ -41,3 +37,4 @@
 - **Prevent `refresh(true)` from firing twice on page load** — Added `if (!initialized)` guard to the `load` listener so `refresh(true)` doesn't run again when it already fired for `DOMContentLoaded`.
 - **Skip observer rebuild on width-only resizes** — Cache `window.innerHeight` and skip `refresh()` when only width changes, since rootMargin is vertical only.
 - **Replace `containsAOSNode` recursive walk with `querySelector`** — Replaced manual recursive tree walk with native `querySelector('[data-aos]')` and modernized array handling.
+- **Remove unused `observers` array from return value** — Removed the `observers` array property from `createObserver()` return value that was allocated but never consumed.
