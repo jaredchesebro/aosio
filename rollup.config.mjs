@@ -15,6 +15,17 @@ const transformStyles = postcss({
   use: [['sass', { silenceDeprecations: ['legacy-js-api'] }]],
 });
 
+// Stub plugin that skips SCSS processing for the ESM build
+const stubStyles = {
+  name: 'stub-styles',
+  resolveId(id) {
+    if (/\.scss$/.test(id)) return id;
+  },
+  load(id) {
+    if (/\.scss$/.test(id)) return '';
+  },
+};
+
 const input = 'src/js/aosio.js';
 
 export default [
@@ -51,7 +62,7 @@ export default [
       sourcemap: isDev,
     },
     plugins: [
-      postcss({ extract: false, inject: false }),
+      stubStyles,
       resolve(),
       commonjs(),
       !isDev && terser(),
