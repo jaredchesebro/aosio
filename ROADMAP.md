@@ -2,7 +2,6 @@
 
 ## Low Priority — Code Simplification
 
-- **Replace `Detector` class with plain functions** — `detector.js` exports a stateless class instantiated once. Plain exported functions avoid class/prototype overhead and are simpler.
 - **Remove `orientationchange` listener** — `resize` already fires on orientation change in all modern browsers. The second listener is redundant.
 
 ## Low Priority — Build & Config
@@ -36,3 +35,4 @@
 - **Replace `containsAOSNode` recursive walk with `querySelector`** — Replaced manual recursive tree walk with native `querySelector('[data-aos]')` and modernized array handling.
 - **Remove unused `observers` array from return value** — Removed the `observers` array property from `createObserver()` return value that was allocated but never consumed.
 - **Inline `elements.js` and unwrap `{ node }` wrapper** — Deleted `elements.js`, inlined `querySelectorAll` into `aosio.js`, and changed `$aosElements` to hold plain DOM nodes. Removed `el.node` indirection throughout.
+- **Replace `Detector` class with plain functions** — Replaced the `Detector` class with plain arrow functions. Same API, no class/prototype overhead.

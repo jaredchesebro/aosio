@@ -2,20 +2,12 @@
  * Device detector via matchMedia
  */
 
-class Detector {
-  phone() {
-    return matchMedia(
-      '(pointer: coarse) and (hover: none) and (max-width: 767px)',
-    ).matches;
-  }
+const phone = () =>
+  matchMedia('(pointer: coarse) and (hover: none) and (max-width: 767px)')
+    .matches;
 
-  mobile() {
-    return matchMedia('(pointer: coarse) and (hover: none)').matches;
-  }
+const mobile = () => matchMedia('(pointer: coarse) and (hover: none)').matches;
 
-  tablet() {
-    return this.mobile() && !this.phone();
-  }
-}
+const tablet = () => mobile() && !phone();
 
-export default new Detector();
+export default { phone, mobile, tablet };
