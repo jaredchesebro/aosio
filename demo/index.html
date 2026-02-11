@@ -5,48 +5,115 @@
     <title>AOS - Animate on scroll library</title>
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="dist/aos.css" />
-    <!--[if lt IE 9]>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" href="dist/aosio.css" />
   </head>
   <body>
     <div class="js-scroll-counter scroll-counter"></div>
+
+    <div class="demo-header">
+      <h1>AOS &mdash; CSS Custom Properties Demo</h1>
+      <p>Timing is driven by <code>--aos-duration</code>, <code>--aos-delay</code>, and <code>--aos-easing</code> custom properties set on <code>&lt;body&gt;</code> (globals) and per-element (overrides).</p>
+    </div>
+
+    <!-- Default timing (inherits global custom properties from body) -->
+    <h2 class="section-label">Default timing (400ms / ease)</h2>
     <div class="aos-all">
       <div data-id="1" class="aos-item" data-aos="fade-up"></div>
       <div data-id="2" class="aos-item" data-aos="fade-down"></div>
       <div data-id="3" class="aos-item" data-aos="zoom-out-down"></div>
-      <div data-id="4" class="aos-item" data-aos="flip-down"></div>
-      <div data-id="5" class="aos-item" data-aos="flip-up"></div>
-      <div data-id="6" class="aos-item" data-aos="fade-down"></div>
-      <div data-id="7" class="aos-item" data-aos="fade-in"></div>
-      <div data-id="8" class="aos-item" data-aos="fade-down"></div>
-      <div data-id="9" class="aos-item" data-aos="fade-in"></div>
-      <div data-id="10" class="aos-item" data-aos="fade-down" data-aos-id="super-duper"></div>
-      <div data-id="11" class="aos-item" data-aos="fade-up"></div>
-      <div data-id="12" class="aos-item" data-aos="fade-down"></div>
-      <div data-id="13" class="aos-item" data-aos="fade-in"></div>
-      <div data-id="14" class="aos-item" data-aos="fade-up"></div>
-      <div data-id="15" class="aos-item" data-aos="fade-in"></div>
-      <div data-id="16" class="aos-item" data-aos="fade-up"></div>
-      <div data-id="17" class="aos-item" data-aos="fade-down"></div>
-      <div data-id="18" class="aos-item" data-aos="fade-up"></div>
-      <div data-id="19" class="aos-item" data-aos="zoom-out"></div>
-      <div data-id="20" class="aos-item" data-aos="fade-up"></div>
-      <div data-id="21" class="aos-item" data-aos="zoom-out"></div>
-      <div data-id="22" class="aos-item" data-aos="fade-in"></div>
-      <div data-id="23" class="aos-item" data-aos="zoom-out-up"></div>
-      <div data-id="24" class="aos-item" data-aos="zoom-out-down"></div>
     </div>
 
-    <script src="dist/aos.js"></script>
+    <!-- Per-element duration overrides -->
+    <h2 class="section-label">Custom durations</h2>
+    <div class="aos-all">
+      <div data-id="4" class="aos-item" data-aos="fade-up" data-aos-duration="1000">
+        <span class="item-label">1000ms</span>
+      </div>
+      <div data-id="5" class="aos-item" data-aos="fade-up" data-aos-duration="800">
+        <span class="item-label">800ms</span>
+      </div>
+      <div data-id="6" class="aos-item" data-aos="fade-up" data-aos-duration="1500">
+        <span class="item-label">1500ms</span>
+      </div>
+    </div>
+
+    <!-- Per-element delay overrides -->
+    <h2 class="section-label">Staggered delays</h2>
+    <div class="aos-all">
+      <div data-id="7" class="aos-item" data-aos="fade-right" data-aos-delay="0">
+        <span class="item-label">0ms delay</span>
+      </div>
+      <div data-id="8" class="aos-item" data-aos="fade-right" data-aos-delay="500">
+        <span class="item-label">200ms delay</span>
+      </div>
+      <div data-id="9" class="aos-item" data-aos="fade-right" data-aos-delay="1000">
+        <span class="item-label">400ms delay</span>
+      </div>
+    </div>
+
+    <!-- Per-element easing overrides -->
+    <h2 class="section-label">Custom easings</h2>
+    <div class="aos-all">
+      <div data-id="10" class="aos-item" data-aos="flip-down" data-aos-easing="ease-out-back" data-aos-duration="800">
+        <span class="item-label">ease-out-back</span>
+      </div>
+      <div data-id="11" class="aos-item" data-aos="flip-up" data-aos-easing="ease-in-out-sine" data-aos-duration="800">
+        <span class="item-label">ease-in-out-sine</span>
+      </div>
+      <div data-id="12" class="aos-item" data-aos="flip-down" data-aos-easing="linear" data-aos-duration="800">
+        <span class="item-label">linear</span>
+      </div>
+    </div>
+
+    <!-- Mixed overrides -->
+    <h2 class="section-label">Combined overrides</h2>
+    <div class="aos-all">
+      <div data-id="13" class="aos-item" data-aos="zoom-in" data-aos-duration="1200" data-aos-easing="ease-out-back">
+        <span class="item-label">1200ms / ease-out-back</span>
+      </div>
+      <div data-id="14" class="aos-item" data-aos="slide-up" data-aos-duration="600" data-aos-delay="100">
+        <span class="item-label">600ms / 100ms delay</span>
+      </div>
+      <div data-id="15" class="aos-item" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200" data-aos-easing="ease-in-out-quart">
+        <span class="item-label">1000ms / 200ms / ease-in-out-quart</span>
+      </div>
+    </div>
+
+    <!-- Non-50ms-increment values (now possible with custom properties) -->
+    <h2 class="section-label">Arbitrary values (not limited to 50ms increments)</h2>
+    <div class="aos-all">
+      <div data-id="16" class="aos-item" data-aos="fade-up" data-aos-duration="175">
+        <span class="item-label">175ms</span>
+      </div>
+      <div data-id="17" class="aos-item" data-aos="fade-up" data-aos-duration="333">
+        <span class="item-label">333ms</span>
+      </div>
+      <div data-id="18" class="aos-item" data-aos="fade-up" data-aos-duration="2750">
+        <span class="item-label">2750ms</span>
+      </div>
+    </div>
+
+    <!-- Remaining items with defaults -->
+    <h2 class="section-label">More animations (defaults)</h2>
+    <div class="aos-all">
+      <div data-id="19" class="aos-item" data-aos="zoom-out"></div>
+      <div data-id="20" class="aos-item" data-aos="fade-up"></div>
+      <div data-id="21" class="aos-item" data-aos="zoom-out-up"></div>
+      <div data-id="22" class="aos-item" data-aos="slide-left"></div>
+      <div data-id="23" class="aos-item" data-aos="slide-right"></div>
+      <div data-id="24" class="aos-item" data-aos="fade-down" data-aos-id="super-duper"></div>
+    </div>
+
+    <script src="dist/aosio.js"></script>
     <script>
       document.querySelector('html').classList.remove('no-js');
       if (!window.Cypress) {
         const scrollCounter = document.querySelector('.js-scroll-counter');
 
         AOS.init({
-          mirror: true
+          duration: 400,
+          easing: 'ease',
+          mirror: false
         });
 
         document.addEventListener('aos:in', function(e) {

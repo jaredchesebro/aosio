@@ -1,63 +1,33 @@
 let callback = () => {};
 
 function containsAOSNode(nodes) {
-  let i, currentNode, result;
-
-  for (i = 0; i < nodes.length; i += 1) {
-    currentNode = nodes[i];
-
-    if (currentNode.dataset && currentNode.dataset.aos) {
-      return true;
-    }
-
-    result = currentNode.children && containsAOSNode(currentNode.children);
-
-    if (result) {
-      return true;
-    }
-  }
-
-  return false;
+  return nodes.some(
+    (n) =>
+      n.nodeType === 1 &&
+      (n.dataset?.aos != null || n.querySelector?.('[data-aos]')),
+  );
 }
 
 function check(mutations) {
   if (!mutations) return;
 
-  mutations.forEach(mutation => {
-    const addedNodes = Array.prototype.slice.call(mutation.addedNodes);
-    const removedNodes = Array.prototype.slice.call(mutation.removedNodes);
-    const allNodes = addedNodes.concat(removedNodes);
-
-    if (containsAOSNode(allNodes)) {
+  mutations.forEach((mutation) => {
+    if (containsAOSNode([...mutation.addedNodes])) {
       return callback();
     }
   });
 }
 
-function getMutationObserver() {
-  return (
-    window.MutationObserver ||
-    window.WebKitMutationObserver ||
-    window.MozMutationObserver
-  );
-}
-
-function isSupported() {
-  return !!getMutationObserver();
-}
-
-function ready(selector, fn) {
-  const doc = window.document;
-  const MutationObserver = getMutationObserver();
-
+function ready(fn) {
   const observer = new MutationObserver(check);
   callback = fn;
 
-  observer.observe(doc.documentElement, {
+  observer.observe(document.documentElement, {
     childList: true,
     subtree: true,
-    removedNodes: true
   });
+
+  return observer;
 }
 
-export default { isSupported, ready };
+export default { ready };

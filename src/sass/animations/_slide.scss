@@ -1,0 +1,33 @@
+/**
+ * Slide animations
+ */
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  html:not(.no-js) {
+    [data-aos^='slide'][data-aos^='slide'] {
+      transition-property: transform;
+      visibility: hidden;
+
+      &.aos-animate {
+        visibility: visible;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    [data-aos='slide-up'] {
+      transform: translate3d(0, 100%, 0);
+    }
+
+    [data-aos='slide-down'] {
+      transform: translate3d(0, -100%, 0);
+    }
+
+    [data-aos='slide-right'] {
+      transform: translate3d(-100%, 0, 0);
+    }
+
+    [data-aos='slide-left'] {
+      transform: translate3d(100%, 0, 0);
+    }
+  }
+}
