@@ -34,30 +34,16 @@ function check(mutations) {
   });
 }
 
-function getMutationObserver() {
-  return (
-    window.MutationObserver ||
-    window.WebKitMutationObserver ||
-    window.MozMutationObserver
-  );
-}
-
-function isSupported() {
-  return !!getMutationObserver();
-}
-
-function ready(selector, fn) {
-  const doc = window.document;
-  const MutationObserver = getMutationObserver();
-
+function ready(fn) {
   const observer = new MutationObserver(check);
   callback = fn;
 
-  observer.observe(doc.documentElement, {
+  observer.observe(document.documentElement, {
     childList: true,
     subtree: true,
-    removedNodes: true,
   });
+
+  return observer;
 }
 
-export default { isSupported, ready };
+export default { ready };

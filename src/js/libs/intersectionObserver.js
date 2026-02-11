@@ -17,40 +17,23 @@ const getRootMargin = (anchorPlacement, offset) => {
 
   switch (anchorPlacement) {
     case 'top-bottom':
-      // Element top hits viewport bottom (default)
-      return `0px 0px ${-offset}px 0px`;
-
     case 'center-bottom':
-      // Element center hits viewport bottom
-      return `0px 0px ${-offset}px 0px`;
-
     case 'bottom-bottom':
-      // Element bottom hits viewport bottom
       return `0px 0px ${-offset}px 0px`;
 
     case 'top-center':
-      // Element top hits viewport center
-      return `${-(windowHeight / 2) + offset}px 0px ${-(windowHeight / 2) + offset}px 0px`;
-
     case 'center-center':
-      // Element center hits viewport center
-      return `${-(windowHeight / 2) + offset}px 0px ${-(windowHeight / 2) + offset}px 0px`;
-
-    case 'bottom-center':
-      // Element bottom hits viewport center
-      return `${-(windowHeight / 2) + offset}px 0px ${-(windowHeight / 2) + offset}px 0px`;
+    case 'bottom-center': {
+      const centerMargin = Math.max(Math.round(windowHeight / 2) - offset, 1);
+      return `${-centerMargin}px 0px ${-centerMargin}px 0px`;
+    }
 
     case 'top-top':
-      // Element top hits viewport top
-      return `${offset}px 0px ${-windowHeight + offset}px 0px`;
-
-    case 'bottom-top':
-      // Element bottom hits viewport top
-      return `${offset}px 0px ${-windowHeight + offset}px 0px`;
-
     case 'center-top':
-      // Element center hits viewport top
-      return `${offset}px 0px ${-windowHeight + offset}px 0px`;
+    case 'bottom-top': {
+      const topExpand = Math.max(offset, 1);
+      return `${topExpand}px 0px ${-(windowHeight - offset)}px 0px`;
+    }
 
     default:
       return `0px 0px ${-offset}px 0px`;
@@ -77,7 +60,7 @@ const getThreshold = (anchorPlacement) => {
     case 'bottom-bottom':
     case 'bottom-center':
     case 'bottom-top':
-      return 1; // Trigger when fully visible
+      return 0; // rootMargin compensates with element height
 
     default:
       return 0;
@@ -122,11 +105,8 @@ const removeClasses = (node, classes) => {
  * @returns {IntersectionObserver} observer instance
  */
 export const createObserver = (elements, options) => {
-  // Map to store element-specific options
-  const elementMap = new WeakMap();
-
   // Prepare elements and store their config
-  elements.forEach((el) => {
+  const elementConfigs = elements.map((el) => {
     const { node } = el;
     const mirror = getInlineOption(node, 'mirror', options.mirror);
     const once = getInlineOption(node, 'once', options.once);
@@ -158,8 +138,21 @@ export const createObserver = (elements, options) => {
       node.classList.add(options.initClassName);
     }
 
-    // Store element config
-    elementMap.set(node, {
+    // Resolve anchor element
+    const anchorSelector = getInlineOption(node, 'anchor');
+    let anchorEl = null;
+    if (anchorSelector) {
+      try {
+        anchorEl = document.querySelector(anchorSelector);
+      } catch (e) {
+        anchorEl = null;
+      }
+    }
+    const observeTarget = anchorEl || node;
+
+    return {
+      node,
+      observeTarget,
       mirror,
       once,
       id,
@@ -167,52 +160,63 @@ export const createObserver = (elements, options) => {
       animated: false,
       anchorPlacement,
       offset,
-    });
+    };
   });
 
-  // Create observers grouped by anchor placement for efficiency
+  // IO callbacks are suppressed until activate() is called.
+  // This prevents the initial IO callback from adding aos-animate
+  // before CSS transitions are enabled (aos-ready), which would
+  // cause above-the-fold elements to snap to their final state
+  // with no visible animation.
+  let activated = false;
+
+  // Create observers grouped by anchor placement + offset for efficiency
+  // Each observer entry has a targetMap: Map<observeTarget, Array<config>>
   const observersByConfig = new Map();
 
-  elements.forEach((el) => {
-    const { node } = el;
-    const config = elementMap.get(node);
-    const { anchorPlacement, offset } = config;
+  elementConfigs.forEach((config) => {
+    const { observeTarget, anchorPlacement, offset } = config;
 
-    // Create unique key for this configuration
     const configKey = `${anchorPlacement}-${offset}`;
 
     if (!observersByConfig.has(configKey)) {
       // Create new observer for this configuration
       const rootMargin = getRootMargin(anchorPlacement, offset);
       const threshold = getThreshold(anchorPlacement);
+      const targetMap = new Map();
 
       const observer = new IntersectionObserver(
         (entries) => {
+          if (!activated) return;
+
           entries.forEach((entry) => {
-            const entryConfig = elementMap.get(entry.target);
-            if (!entryConfig) return;
+            const targets = targetMap.get(entry.target);
+            if (!targets) return;
 
-            const { mirror, once, animatedClassNames, id } = entryConfig;
+            targets.forEach((targetConfig) => {
+              const { node, mirror, once, animatedClassNames, id } =
+                targetConfig;
 
-            if (entry.isIntersecting) {
-              // Element is entering viewport
-              if (!entryConfig.animated) {
-                addClasses(entry.target, animatedClassNames);
-                fireEvent('aos:in', entry.target, id);
-                entryConfig.animated = true;
-
-                // If once=true, stop observing this element
-                if (once) {
-                  observer.unobserve(entry.target);
+              if (entry.isIntersecting) {
+                // Anchor is entering viewport — animate the original node
+                if (!targetConfig.animated) {
+                  addClasses(node, animatedClassNames);
+                  fireEvent('aos:in', node, id);
+                  targetConfig.animated = true;
+                }
+              } else {
+                // Anchor is leaving viewport
+                if (targetConfig.animated && mirror && !once) {
+                  removeClasses(node, animatedClassNames);
+                  fireEvent('aos:out', node, id);
+                  targetConfig.animated = false;
                 }
               }
-            } else {
-              // Element is leaving viewport
-              if (entryConfig.animated && mirror && !once) {
-                removeClasses(entry.target, animatedClassNames);
-                fireEvent('aos:out', entry.target, id);
-                entryConfig.animated = false;
-              }
+            });
+
+            // If all targets sharing this anchor have once=true and are animated, unobserve
+            if (targets.every((t) => t.once && t.animated)) {
+              observer.unobserve(entry.target);
             }
           });
         },
@@ -222,21 +226,44 @@ export const createObserver = (elements, options) => {
         },
       );
 
-      observersByConfig.set(configKey, observer);
+      observersByConfig.set(configKey, { observer, targetMap });
     }
 
-    // Observe this element with the appropriate observer
-    const observer = observersByConfig.get(configKey);
-    observer.observe(node);
+    // Add this element to the target map and observe
+    const { observer, targetMap } = observersByConfig.get(configKey);
+
+    if (!targetMap.has(observeTarget)) {
+      targetMap.set(observeTarget, []);
+      observer.observe(observeTarget);
+    }
+    targetMap.get(observeTarget).push(config);
   });
 
-  // Return cleanup function
   return {
     disconnect: () => {
-      observersByConfig.forEach((observer) => observer.disconnect());
+      observersByConfig.forEach(({ observer }) => observer.disconnect());
       observersByConfig.clear();
     },
-    observers: Array.from(observersByConfig.values()),
+
+    /**
+     * Enable IO callbacks and animate any elements already in the
+     * viewport. Call this AFTER aos-ready is set on <body> so that
+     * CSS transitions are active and animations are visible.
+     */
+    activate: () => {
+      activated = true;
+      elementConfigs.forEach((config) => {
+        if (config.animated) return;
+        const rect = config.observeTarget.getBoundingClientRect();
+        if (rect.bottom > 0 && rect.top < window.innerHeight - config.offset) {
+          addClasses(config.node, config.animatedClassNames);
+          fireEvent('aos:in', config.node, config.id);
+          config.animated = true;
+        }
+      });
+    },
+
+    observers: Array.from(observersByConfig.values()).map((v) => v.observer),
   };
 };
 

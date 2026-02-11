@@ -6,8 +6,19 @@
  */
 import './../sass/aosio.scss';
 
-// Modules & helpers
-import debounce from 'lodash.debounce';
+// Inline debounce — replaces lodash.debounce for zero dependencies
+const debounce = (fn, wait) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), wait);
+  };
+};
+
+const listen = (target, event, fn) => {
+  target.addEventListener(event, fn);
+  listeners.push({ target, event, fn });
+};
 
 import mutationObserver from './libs/observer';
 import intersectionObserver from './libs/intersectionObserver';
@@ -21,7 +32,9 @@ import resolveEasing from './helpers/resolveEasing';
  */
 let $aosElements = [];
 let observers = null;
+let mutationObs = null;
 let initialized = false;
+let listeners = [];
 
 /**
  * Default options
@@ -83,16 +96,16 @@ const refresh = function (initialize = false) {
     initializeObservers();
 
     /**
-     * Enable transitions after initial observer pass.
-     * Double-rAF ensures observers have fired and the first frame
-     * (elements in their correct initial state) has painted before
-     * transitions are enabled. This prevents a visible fade-out
-     * on page reload when the browser restores scroll position.
+     * Double-rAF ensures the first paint shows elements in their
+     * initial (hidden) state. Then aos-ready enables CSS transitions
+     * and activate() adds aos-animate to above-the-fold elements,
+     * producing a visible animation.
      */
     if (!document.body.classList.contains('aos-ready')) {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           document.body.classList.add('aos-ready');
+          observers.activate();
         });
       });
     }
@@ -116,6 +129,11 @@ const refreshHard = function () {
  * Disconnect all observers and remove classes
  */
 const disable = function () {
+  if (mutationObs) {
+    mutationObs.disconnect();
+    mutationObs = null;
+  }
+
   if (observers) {
     observers.disconnect();
     observers = null;
@@ -143,6 +161,26 @@ const disable = function () {
 };
 
 /**
+ * Destroy AOS
+ * Full teardown: disable observers, remove event listeners, clear CSS custom properties
+ */
+const destroy = function () {
+  disable();
+
+  listeners.forEach(({ target, event, fn }) =>
+    target.removeEventListener(event, fn),
+  );
+  listeners = [];
+
+  document.body.style.removeProperty('--aos-duration');
+  document.body.style.removeProperty('--aos-delay');
+  document.body.style.removeProperty('--aos-easing');
+
+  $aosElements = [];
+  initialized = false;
+};
+
+/**
  * Initializing AOS
  * - Create options merging defaults with user defined options
  * - Set attributes on <body> as global setting - CSS relies on it
@@ -164,23 +202,11 @@ const init = function init(settings) {
   $aosElements = elements();
 
   /**
-   * Disable mutation observing if not supported
-   */
-  if (!options.disableMutationObserver && !mutationObserver.isSupported()) {
-    console.info(`
-      aos: MutationObserver is not supported on this browser,
-      code mutations observing has been disabled.
-      You may have to call "refreshHard()" by yourself.
-    `);
-    options.disableMutationObserver = true;
-  }
-
-  /**
    * Observe [data-aos] elements
    * If something is loaded by AJAX, refresh observers
    */
   if (!options.disableMutationObserver) {
-    mutationObserver.ready('[data-aos]', refreshHard);
+    mutationObs = mutationObserver.ready(refreshHard);
   }
 
   /**
@@ -206,11 +232,11 @@ const init = function init(settings) {
    */
   if (['DOMContentLoaded', 'load'].indexOf(options.startEvent) === -1) {
     // Listen to custom startEvent
-    document.addEventListener(options.startEvent, function () {
+    listen(document, options.startEvent, function () {
       refresh(true);
     });
   } else {
-    window.addEventListener('load', function () {
+    listen(window, 'load', function () {
       refresh(true);
     });
   }
@@ -227,15 +253,9 @@ const init = function init(settings) {
    * Refresh observers on window resize (debounced)
    * This recalculates rootMargin for percentage-based placements
    */
-  window.addEventListener(
-    'resize',
-    debounce(refresh, options.debounceDelay, true),
-  );
+  listen(window, 'resize', debounce(refresh, options.debounceDelay));
 
-  window.addEventListener(
-    'orientationchange',
-    debounce(refresh, options.debounceDelay, true),
-  );
+  listen(window, 'orientationchange', debounce(refresh, options.debounceDelay));
 
   return $aosElements;
 };
@@ -248,4 +268,5 @@ export default {
   init,
   refresh,
   refreshHard,
+  destroy,
 };

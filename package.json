@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Animate on scroll library via Intersection Observer",
   "author": "DuBose Web",
-  "private": "true",
+  "private": true,
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
@@ -20,9 +20,6 @@
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-serve": "^3.0.0",
     "sass": "^1.50.0"
-  },
-  "dependencies": {
-    "lodash.debounce": "^4.0.8"
   },
   "scripts": {
     "build": "NODE_ENV=production rollup -c rollup.config.mjs",

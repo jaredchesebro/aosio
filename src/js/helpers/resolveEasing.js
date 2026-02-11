@@ -25,13 +25,13 @@ const easingMap = {
   'ease-out-quad': 'cubic-bezier(.25, .46, .45, .94)',
   'ease-in-out-quad': 'cubic-bezier(.455, .03, .515, .955)',
 
-  'ease-in-cubic': 'cubic-bezier(.55, .085, .68, .53)',
-  'ease-out-cubic': 'cubic-bezier(.25, .46, .45, .94)',
-  'ease-in-out-cubic': 'cubic-bezier(.455, .03, .515, .955)',
+  'ease-in-cubic': 'cubic-bezier(.55, .055, .675, .19)',
+  'ease-out-cubic': 'cubic-bezier(.215, .61, .355, 1)',
+  'ease-in-out-cubic': 'cubic-bezier(.645, .045, .355, 1)',
 
-  'ease-in-quart': 'cubic-bezier(.55, .085, .68, .53)',
-  'ease-out-quart': 'cubic-bezier(.25, .46, .45, .94)',
-  'ease-in-out-quart': 'cubic-bezier(.455, .03, .515, .955)',
+  'ease-in-quart': 'cubic-bezier(.895, .03, .685, .22)',
+  'ease-out-quart': 'cubic-bezier(.165, .84, .44, 1)',
+  'ease-in-out-quart': 'cubic-bezier(.77, 0, .175, 1)',
 };
 
 export default (name) => easingMap[name] || name;

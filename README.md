@@ -24,7 +24,7 @@ window.addEventListener('scroll', throttle(() => {
 - High CPU usage, battery drain on mobile
 - Can cause scroll jank on lower-end devices
 
-### AOS-IO (IntersectionObserver)
+### AOSIO (IntersectionObserver)
 
 The IntersectionObserver version uses browser-native viewport intersection detection:
 
@@ -130,7 +130,17 @@ Customize per-element behavior with `data-aos-*` attributes:
   data-aos-mirror="true"
   data-aos-once="false"
   data-aos-anchor-placement="top-center"
+  data-aos-anchor=".trigger-element"
 ></div>
+```
+
+#### `data-aos-anchor`
+
+Trigger an animation based on another element's scroll position. The value is a CSS selector — the first matching element becomes the scroll trigger, while animation classes are applied to the original `[data-aos]` element. If the selector matches nothing or is invalid, the element observes its own position (default behavior).
+
+```html
+<!-- Animate the sidebar item when the content section scrolls into view -->
+<div data-aos="fade-up" data-aos-anchor="#section-2"></div>
 ```
 
 ---
@@ -150,6 +160,8 @@ $aos-distance: 200px;
 @import 'path/to/sass/animations/fade';
 @import 'path/to/sass/animations/slide';
 ```
+
+`$aos-distance` controls how far elements translate during fade, zoom, and slide animations (default: `100px`). Set it before importing any animation partials.
 
 Duration, delay, and easing are handled via CSS custom properties set by JS — no SCSS loops or generated CSS. The `_easing.scss` file is documentation-only and produces no CSS output.
 

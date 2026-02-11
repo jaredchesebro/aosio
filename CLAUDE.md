@@ -4,53 +4,49 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-AOS (Animate On Scroll) — a lightweight JavaScript library that animates elements as they scroll into view. Version 3.0.0-beta.6, on the `feature/modular` branch (PR target: `next`).
+AOSIO (Animate On Scroll via Intersection Observer) — a lightweight JavaScript library that animates elements as they scroll into view. Uses the native IntersectionObserver API instead of scroll events for better performance and battery life. No IE11 support (Chrome 51+, Firefox 55+, Safari 12.1+, Edge 15+).
 
 ## Commands
 
 - **Build:** `npm run build` (production Rollup build)
-- **Dev:** `npm run dev` (parallel watch + live-server on port 8080)
-- **Watch only:** `npm run watch`
-- **Lint:** `npm run lint` (ESLint on src, cypress, demo, scripts)
-- **Test:** `npm test` (lint + Cypress e2e tests via `scripts/run-cypress-tests.js`)
-- **Test interactive:** `npm run test:dev` (opens Cypress runner)
-
-Note: The test script references `yarn lint` internally but `npm run lint` works equivalently.
+- **Dev:** `npm run dev` (watch + live-server on port 8080)
+- **Lint:** `npm run lint` (ESLint on src)
 
 ## Architecture
 
 ### JS
 
-**`src/js/aosio.js`** — IntersectionObserver version. No scroll listeners; uses native IO API for much better performance with many elements. No IE11 support.
+**`src/js/aosio.js`** — Main entry point. Uses IntersectionObserver for detecting when elements enter/leave the viewport. No scroll listeners. Global settings are applied as CSS custom properties (`--aos-duration`, `--aos-delay`, `--aos-easing`) on `<body>`.
 
-All three expose the same public API: `AOS.init(options)`, `AOS.refresh()`, `AOS.refreshHard()`.
-
-### SASS Structure (`src/sass/`)
-
-- `aos.scss` — Full bundle (imports core + easing + all animations)
-- `_core.scss` — Duration/delay generators (50ms increments, 60 steps)
-- `_easing.scss` — 18 easing functions; `_easing-lite.scss` — 8 essential
-- `_animations.scss` — Imports all animation partials
-- `animations/` — Individual partials: `_fade.scss`, `_zoom.scss`, `_slide.scss`, `_flip.scss`
+Public API: `AOS.init(options)`, `AOS.refresh()`, `AOS.refreshHard()`, `AOS.destroy()`.
 
 ### Key Helpers (`src/js/helpers/`)
 
 - `getInlineOption.js` — Parses `data-aos-*` attributes from elements
+- `elements.js` — Collects and prepares AOS elements from the DOM
+- `detector.js` — Device detection via matchMedia (mobile, phone, tablet)
+- `resolveEasing.js` — Maps easing names to CSS timing functions
 
 ### Libs (`src/js/libs/`)
 
-- `observer.js` — MutationObserver wrapper for dynamic DOM content
+- `observer.js` — MutationObserver wrapper for dynamically added DOM content (uses unprefixed `MutationObserver` directly)
 - `intersectionObserver.js` — IO implementation with observer pooling by config (anchor-placement + offset)
+
+### SASS Structure (`src/sass/`)
+
+- `aosio.scss` — Full bundle (imports core + animations)
+- `_core.scss` — Core styles using CSS custom properties for duration, delay, and easing. Wraps animations in `@media (prefers-reduced-motion: no-preference)` for accessibility
+- `_easing.scss` — 18 easing function definitions (documentation/reference only, no CSS output)
+- `_animations.scss` — Imports all animation partials
+- `animations/` — Individual partials: `_config.scss`, `_fade.scss`, `_zoom.scss`, `_slide.scss`, `_flip.scss`
 
 ## Build Output
 
-Rollup produces multiple bundles in `dist/`:
-- Standard: `aosio.js` (UMD), `aosio.css`
-
-Package exports are defined in `package.json` under `"exports"` for each variant.
+Rollup produces `dist/aosio.js` (UMD, global `AOS`), `dist/aosio.css`, and a sourcemap. CSS is processed with Autoprefixer and CSSNano in production.
 
 ## Style
 
-- ESLint with babel-eslint parser, prettier plugin, single quotes
-- 2-space indentation (`.editorconfig`)
-- Runtime dependencies: `lodash.throttle`, `lodash.debounce`, `classlist-polyfill`
+- ESLint flat config with eslint-plugin-prettier, single quotes
+- ES2022 for src, CommonJS for scripts
+- 2-space indentation, LF line endings (`.editorconfig`)
+- No runtime dependencies
