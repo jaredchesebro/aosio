@@ -4,9 +4,6 @@
 
 - **Replace `Detector` class with plain functions** — `detector.js` exports a stateless class instantiated once. Plain exported functions avoid class/prototype overhead and are simpler.
 - **Remove `orientationchange` listener** — `resize` already fires on orientation change in all modern browsers. The second listener is redundant.
-- **Inline `elements.js` helper** — It's a one-liner (`querySelectorAll` + map). Inlining it into `initializeObservers` removes a module boundary and import for no loss of clarity.
-- **Unwrap `{ node }` element wrapper** — `elements.js` wraps each DOM node in `{ node }` — a legacy pattern from the original AOS where extra properties were stored alongside. In the IO version those properties live in `elementConfigs` inside `createObserver()`. Return plain DOM nodes instead.
-- **Use modern array methods** — Replace `Array.prototype.slice.call` in `observer.js` with spread (`[...mutation.addedNodes]`). All target browsers support it.
 
 ## Low Priority — Build & Config
 
@@ -38,3 +35,4 @@
 - **Skip observer rebuild on width-only resizes** — Cache `window.innerHeight` and skip `refresh()` when only width changes, since rootMargin is vertical only.
 - **Replace `containsAOSNode` recursive walk with `querySelector`** — Replaced manual recursive tree walk with native `querySelector('[data-aos]')` and modernized array handling.
 - **Remove unused `observers` array from return value** — Removed the `observers` array property from `createObserver()` return value that was allocated but never consumed.
+- **Inline `elements.js` and unwrap `{ node }` wrapper** — Deleted `elements.js`, inlined `querySelectorAll` into `aosio.js`, and changed `$aosElements` to hold plain DOM nodes. Removed `el.node` indirection throughout.

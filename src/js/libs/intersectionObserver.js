@@ -106,8 +106,7 @@ const removeClasses = (node, classes) => {
  */
 export const createObserver = (elements, options) => {
   // Prepare elements and store their config
-  const elementConfigs = elements.map((el) => {
-    const { node } = el;
+  const elementConfigs = elements.map((node) => {
     const mirror = getInlineOption(node, 'mirror', options.mirror);
     const once = getInlineOption(node, 'once', options.once);
     const id = getInlineOption(node, 'id');

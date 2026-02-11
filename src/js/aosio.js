@@ -24,7 +24,6 @@ import mutationObserver from './libs/observer';
 import intersectionObserver from './libs/intersectionObserver';
 
 import detect from './helpers/detector';
-import elements from './helpers/elements';
 import resolveEasing from './helpers/resolveEasing';
 
 /**
@@ -77,7 +76,7 @@ const isDisabled = function (optionDisable) {
  */
 const initializeObservers = function () {
   // Get fresh list of elements
-  $aosElements = elements();
+  $aosElements = [...document.querySelectorAll('[data-aos]')];
 
   // Disconnect any existing observers
   if (observers) {
@@ -154,16 +153,16 @@ const disable = function () {
   document.body.classList.remove('aos-ready');
 
   $aosElements.forEach(function (el) {
-    el.node.style.removeProperty('--aos-duration');
-    el.node.style.removeProperty('--aos-delay');
-    el.node.style.removeProperty('--aos-easing');
+    el.style.removeProperty('--aos-duration');
+    el.style.removeProperty('--aos-delay');
+    el.style.removeProperty('--aos-easing');
 
     if (options.initClassName) {
-      el.node.classList.remove(options.initClassName);
+      el.classList.remove(options.initClassName);
     }
 
     if (options.animatedClassName) {
-      el.node.classList.remove(options.animatedClassName);
+      el.classList.remove(options.animatedClassName);
     }
   });
 };
@@ -211,7 +210,7 @@ const init = function init(settings) {
   }
 
   // Create initial array with elements
-  $aosElements = elements();
+  $aosElements = [...document.querySelectorAll('[data-aos]')];
 
   /**
    * Observe [data-aos] elements
