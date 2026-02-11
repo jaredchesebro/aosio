@@ -108,6 +108,10 @@ const refresh = function (initialize = false) {
           observers.activate();
         });
       });
+    } else {
+      // aos-ready already set from a prior refresh — activate new observers
+      // immediately so IO callbacks are no longer suppressed.
+      observers.activate();
     }
   }
 };

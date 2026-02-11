@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Animate on scroll library via Intersection Observer",
   "author": "DuBose Web",
+  "main": "dist/aosio.js",
+  "module": "dist/aosio.esm.js",
   "private": true,
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",

@@ -41,4 +41,20 @@ export default [
       isDev && livereload(['dist', 'demo']),
     ].filter(Boolean),
   },
+
+  // ESM build (for bundlers / import)
+  {
+    input,
+    output: {
+      file: 'dist/aosio.esm.js',
+      format: 'es',
+      sourcemap: isDev,
+    },
+    plugins: [
+      postcss({ extract: false, inject: false }),
+      resolve(),
+      commonjs(),
+      !isDev && terser(),
+    ].filter(Boolean),
+  },
 ];
