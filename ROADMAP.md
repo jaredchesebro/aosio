@@ -1,9 +1,5 @@
 # Roadmap
 
-## Low Priority — Code Simplification
-
-- **Remove `orientationchange` listener** — `resize` already fires on orientation change in all modern browsers. The second listener is redundant.
-
 ## Low Priority — Build & Config
 
 - **Skip CSSNano in dev mode** — `cssnano` runs on every watch rebuild unnecessarily. Conditionally include it: `[autoprefixer, !isDev && cssnano].filter(Boolean)`.
@@ -36,3 +32,4 @@
 - **Remove unused `observers` array from return value** — Removed the `observers` array property from `createObserver()` return value that was allocated but never consumed.
 - **Inline `elements.js` and unwrap `{ node }` wrapper** — Deleted `elements.js`, inlined `querySelectorAll` into `aosio.js`, and changed `$aosElements` to hold plain DOM nodes. Removed `el.node` indirection throughout.
 - **Replace `Detector` class with plain functions** — Replaced the `Detector` class with plain arrow functions. Same API, no class/prototype overhead.
+- **Remove `orientationchange` listener** — Removed redundant listener since `resize` already fires on orientation change in all modern browsers.

@@ -266,8 +266,6 @@ const init = function init(settings) {
    */
   listen(window, 'resize', debounce(refresh, options.debounceDelay));
 
-  listen(window, 'orientationchange', debounce(refresh, options.debounceDelay));
-
   return $aosElements;
 };
 
