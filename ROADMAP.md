@@ -1,10 +1,5 @@
 # Roadmap
 
-## Low Priority — Build & Config
-
-- **Remove `_easing.scss` from import chain** — The file is comment-only and emits zero CSS. It can be removed from `aosio.scss` (or converted to a `.md` reference) with no output change.
-- **Fix `_easing.scss` cubic-bezier values** — Several comment values (`ease-out-cubic`, `ease-in-out-cubic`, `ease-in-quart`, `ease-out-quart`, `ease-in-out-quart`) are copy-pasted duplicates of the quad easings. Should match the correct values in `resolveEasing.js`.
-
 ## Completed
 
 - **Remove UA-sniffing device detector** — Replaced `detector.js` regex patterns with modern `matchMedia` checks (`pointer: coarse`, `hover: none`). Removed dead `ie11()` method.
@@ -33,3 +28,4 @@
 - **Skip CSSNano in dev mode** — Conditionally include CSSNano only in production builds so dev watch rebuilds are faster.
 - **Stub SCSS import in ESM build** — Replaced PostCSS plugin with a simple stub that returns empty code for `.scss` imports, eliminating unnecessary Sass compilation.
 - **Remove unnecessary Rollup plugins** — Removed `@rollup/plugin-node-resolve` and `@rollup/plugin-commonjs` from config and devDependencies. No external dependencies to resolve or convert.
+- **Remove `_easing.scss`** — Deleted the comment-only file and removed its `@use` from `aosio.scss`. The correct easing values live in `resolveEasing.js`.
