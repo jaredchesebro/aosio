@@ -169,15 +169,19 @@ Duration, delay, and easing are handled via CSS custom properties set by JS — 
 
 ## API
 
-AOS exposes three methods:
+AOS exposes four methods:
 
 - **`AOS.init(settings)`** — Initialize AOS with optional settings
 - **`AOS.refresh()`** — Recalculate observer positions (called automatically on resize)
 - **`AOS.refreshHard()`** — Rebuild the element list and refresh observers (called automatically on DOM mutations)
+- **`AOS.destroy()`** — Full teardown: disconnects all observers, removes event listeners, clears CSS custom properties, and resets state. Safe to call `init()` again after destroying.
 
 ```js
 // Manually refresh after dynamic content changes
 AOS.refreshHard();
+
+// Fully tear down AOS (e.g. on SPA route change)
+AOS.destroy();
 ```
 
 AOS uses a MutationObserver to detect DOM changes and automatically calls `refreshHard()` when `[data-aos]` elements are added or removed.

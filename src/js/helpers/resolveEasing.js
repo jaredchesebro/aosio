@@ -6,13 +6,6 @@
  */
 
 const easingMap = {
-  linear: 'cubic-bezier(.250, .250, .750, .750)',
-
-  ease: 'cubic-bezier(.250, .100, .250, 1)',
-  'ease-in': 'cubic-bezier(.420, 0, 1, 1)',
-  'ease-out': 'cubic-bezier(.000, 0, .580, 1)',
-  'ease-in-out': 'cubic-bezier(.420, 0, .580, 1)',
-
   'ease-in-back': 'cubic-bezier(.6, -.28, .735, .045)',
   'ease-out-back': 'cubic-bezier(.175, .885, .32, 1.275)',
   'ease-in-out-back': 'cubic-bezier(.68, -.55, .265, 1.55)',
