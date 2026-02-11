@@ -2,7 +2,6 @@
 
 ## Low Priority — Build & Config
 
-- **Remove unnecessary Rollup plugins** — `@rollup/plugin-node-resolve` and `@rollup/plugin-commonjs` are not needed — zero runtime dependencies, all local ES module imports.
 - **Remove `_easing.scss` from import chain** — The file is comment-only and emits zero CSS. It can be removed from `aosio.scss` (or converted to a `.md` reference) with no output change.
 - **Fix `_easing.scss` cubic-bezier values** — Several comment values (`ease-out-cubic`, `ease-in-out-cubic`, `ease-in-quart`, `ease-out-quart`, `ease-in-out-quart`) are copy-pasted duplicates of the quad easings. Should match the correct values in `resolveEasing.js`.
 
@@ -33,3 +32,4 @@
 - **Add `exports` and `sideEffects` to `package.json`** — Added `"exports"` map for modern bundler resolution and `"sideEffects"` for CSS/SCSS to enable tree-shaking.
 - **Skip CSSNano in dev mode** — Conditionally include CSSNano only in production builds so dev watch rebuilds are faster.
 - **Stub SCSS import in ESM build** — Replaced PostCSS plugin with a simple stub that returns empty code for `.scss` imports, eliminating unnecessary Sass compilation.
+- **Remove unnecessary Rollup plugins** — Removed `@rollup/plugin-node-resolve` and `@rollup/plugin-commonjs` from config and devDependencies. No external dependencies to resolve or convert.

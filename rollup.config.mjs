@@ -1,5 +1,3 @@
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import autoprefixer from 'autoprefixer';
@@ -40,8 +38,6 @@ export default [
     },
     plugins: [
       transformStyles,
-      resolve(),
-      commonjs(),
       !isDev && terser(),
       isDev &&
         serve({
@@ -63,8 +59,6 @@ export default [
     },
     plugins: [
       stubStyles,
-      resolve(),
-      commonjs(),
       !isDev && terser(),
     ].filter(Boolean),
   },
