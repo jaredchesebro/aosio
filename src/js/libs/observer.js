@@ -25,10 +25,8 @@ function check(mutations) {
 
   mutations.forEach((mutation) => {
     const addedNodes = Array.prototype.slice.call(mutation.addedNodes);
-    const removedNodes = Array.prototype.slice.call(mutation.removedNodes);
-    const allNodes = addedNodes.concat(removedNodes);
 
-    if (containsAOSNode(allNodes)) {
+    if (containsAOSNode(addedNodes)) {
       return callback();
     }
   });

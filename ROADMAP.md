@@ -2,7 +2,6 @@
 
 ## Medium Priority — Stability
 
-- **Only trigger MutationObserver rebuild on additions** — Removed nodes trigger a full observer rebuild unnecessarily. Only `addedNodes` containing `[data-aos]` elements need to fire `refreshHard()`.
 - **Prevent `refresh(true)` from firing twice on page load** — When `readyState` is `'interactive'`, `refresh(true)` runs immediately and again on `load`. The `load` listener callback should check `if (initialized) return`.
 
 ## Low Priority — Performance
@@ -44,3 +43,4 @@
 - **Fix `Object.assign` mutating default options** — Froze defaults as a constant and changed `init()` to merge into a fresh object (`Object.assign({}, defaults, settings)`) so each call starts clean.
 - **Guard against double initialization** — `init()` now calls `destroy()` first if already initialized, preventing listener and observer leaks on repeated calls.
 - **Fix `getInlineOption` falsy-value fallback** — Changed `return attr || fallback` to `return attr ?? fallback` so values like `"0"` are preserved instead of falling through to the default.
+- **Only trigger MutationObserver rebuild on additions** — Removed `removedNodes` from the MutationObserver check so only newly added `[data-aos]` elements trigger `refreshHard()`.
