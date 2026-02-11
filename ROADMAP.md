@@ -1,9 +1,5 @@
 # Roadmap
 
-## High Priority — Bugs
-
-- **Fix `Object.assign` mutating default options** — `Object.assign(options, settings)` permanently mutates the defaults object. A second `init()` after `destroy()` inherits stale values from the prior call. Fix: use a frozen defaults constant and `Object.assign({}, defaults, settings)`.
-
 ## Medium Priority — Stability
 
 - **Guard against double initialization** — Calling `init()` twice without `destroy()` leaks event listeners, MutationObservers, and IntersectionObservers. Either call `destroy()` at the top of `init()` or guard with `if (initialized) return`.
@@ -47,3 +43,4 @@
 - **Add ESM build output** — Added a second Rollup output (`dist/aosio.esm.js`, `format: 'es'`) and `"main"`/`"module"` fields in `package.json` so bundlers can import AOS as an ES module.
 - **Remove `pointer-events: none` on un-animated elements** — Removed the `pointer-events: none` rule from `_core.scss` that blocked interaction on all `[data-aos]` elements until they animated.
 - **Stop `disable()` from stripping `data-aos` attributes** — Removed `removeAttribute('data-aos-*')` calls from `disable()` so user markup is preserved and re-initialization works after `disable()` or `destroy()`.
+- **Fix `Object.assign` mutating default options** — Froze defaults as a constant and changed `init()` to merge into a fresh object (`Object.assign({}, defaults, settings)`) so each call starts clean.

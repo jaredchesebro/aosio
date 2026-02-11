@@ -39,7 +39,7 @@ let listeners = [];
 /**
  * Default options
  */
-let options = {
+const defaults = Object.freeze({
   offset: 120,
   delay: 0,
   easing: 'ease',
@@ -54,7 +54,9 @@ let options = {
   useClassNames: false,
   disableMutationObserver: false,
   debounceDelay: 50,
-};
+});
+
+let options = { ...defaults };
 
 /**
  * Check if AOS should be disabled based on provided setting
@@ -188,7 +190,7 @@ const destroy = function () {
  * - Create IntersectionObservers for all AOS elements
  */
 const init = function init(settings) {
-  options = Object.assign(options, settings);
+  options = Object.assign({}, defaults, settings);
 
   // Check for IntersectionObserver support
   if (!intersectionObserver.isSupported()) {
