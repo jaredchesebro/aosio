@@ -10,6 +10,7 @@
       "import": "./dist/aosio.esm.js",
       "require": "./dist/aosio.js"
     },
+    "./headless": "./dist/aosio.esm.js",
     "./dist/*": "./dist/*",
     "./src/*": "./src/*"
   },

@@ -13,23 +13,10 @@ const transformStyles = postcss({
   use: [['sass', { silenceDeprecations: ['legacy-js-api'] }]],
 });
 
-// Stub plugin that skips SCSS processing for the ESM build
-const stubStyles = {
-  name: 'stub-styles',
-  resolveId(id) {
-    if (/\.scss$/.test(id)) return id;
-  },
-  load(id) {
-    if (/\.scss$/.test(id)) return '';
-  },
-};
-
-const input = 'src/js/aosio.js';
-
 export default [
   // UMD build (for <script> tags)
   {
-    input,
+    input: 'src/js/aosio.js',
     output: {
       file: 'dist/aosio.js',
       name: 'AOS',
@@ -51,15 +38,12 @@ export default [
 
   // ESM build (for bundlers / import)
   {
-    input,
+    input: 'src/js/aosio-core.js',
     output: {
       file: 'dist/aosio.esm.js',
       format: 'es',
       sourcemap: isDev,
     },
-    plugins: [
-      stubStyles,
-      !isDev && terser(),
-    ].filter(Boolean),
+    plugins: [!isDev && terser()].filter(Boolean),
   },
 ];
