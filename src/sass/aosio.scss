@@ -1,2 +1,5 @@
 @use 'core';
-@use 'animations';
+@use 'animations/fade';
+@use 'animations/zoom';
+@use 'animations/slide';
+@use 'animations/flip';
