@@ -62,6 +62,7 @@ let options = { ...defaults };
  */
 const isDisabled = function (optionDisable) {
   return (
+    document.documentElement.hasAttribute('data-aos-disabled') ||
     optionDisable === true ||
     (optionDisable === 'mobile' && detect.mobile()) ||
     (optionDisable === 'phone' && detect.phone()) ||
