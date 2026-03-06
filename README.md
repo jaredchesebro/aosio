@@ -143,6 +143,16 @@ Trigger an animation based on another element's scroll position. The value is a 
 <div data-aos="fade-up" data-aos-anchor="#section-2"></div>
 ```
 
+#### `data-aos-disabled`
+
+Add this attribute to the `<html>` tag to prevent AOS from initializing entirely. Useful in CMS templates or environments where you need to disable animations without modifying JavaScript.
+
+```html
+<html data-aos-disabled>
+```
+
+Remove the attribute to restore normal initialization on the next page load.
+
 ---
 
 ## Custom SCSS builds
