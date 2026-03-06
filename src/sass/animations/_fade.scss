@@ -8,7 +8,7 @@
  */
 
 @media screen and (prefers-reduced-motion: no-preference) {
-  html:not(.no-js) {
+  html:not(.no-js):not([data-aos-disabled]) {
     [data-aos^='fade'][data-aos^='fade'] {
       opacity: 0;
       transition-property: opacity, transform;
